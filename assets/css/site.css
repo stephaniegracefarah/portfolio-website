@@ -435,6 +435,41 @@ body {
   row-gap: var(--space-2);
 }
 
+/* ---------- Contact list ---------- */
+
+.contact-list {
+  margin: var(--space-6) 0 0;
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  column-gap: var(--space-3);
+  row-gap: var(--space-3);
+  align-items: baseline;
+}
+
+@media (min-width: 640px) {
+  .contact-list {
+    grid-template-columns: 120px 1fr;
+    column-gap: var(--space-4);
+  }
+}
+
+.contact-list dt {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-ink-muted);
+}
+
+.contact-list dd {
+  margin: 0;
+  font-size: 17px;
+  line-height: 26px;
+}
+
+.contact-list dd.contact-email {
+  font-size: 22px;
+  line-height: 28px;
+}
+
 /* ---------- Data tables (requirements, decisions) ---------- */
 
 .data-table {
@@ -458,6 +493,33 @@ body {
   padding: 10px var(--space-3) 10px 0;
   border-bottom: 1px solid var(--color-hairline);
   vertical-align: top;
+}
+
+/* ---------- About hero (bio + headshot) ---------- */
+
+.about-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+.about-hero .about-text {
+  flex: 1 1 320px;
+}
+
+.headshot-placeholder {
+  width: 240px;
+  max-width: 100%;
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
+  background: var(--color-surface-subtle);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-3);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-ink-muted);
 }
 
 /* ---------- Figures (design section) ---------- */
