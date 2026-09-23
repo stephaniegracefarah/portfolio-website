@@ -151,7 +151,7 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Building and launching</h2>
-<p class="body">Phase 1's data build happened in about three days in March 2026: scaffolding and dbt setup, then the ETL scripts and prompts, then the seed data itself. The repo sat untouched for months after that, until I came back in September to clean it up and write the README that pulls it all together.</p>
+<p class="body">Phase 1's data build happened in about three days in March 2026: scaffolding and dbt setup, then the ETL scripts and prompts, then the seed data itself. The six-month gap after that wasn't idle time, it was a deliberate pause. Scraping commercial sites like Avalara raised a real question worth stopping for, even for a non-commercial personal project: whether that was actually the right source to lean on, licensing and authority both considered. The resolution, replacing the Avalara marketplace facilitator and economic nexus sources with primary state department of revenue sources, is now the top item in the Phase 1 roadmap, and it's the reason that regime doesn't have a staging model and dbt tests yet either. That work is waiting on the source swap, not stalled by accident.</p>
 <p class="body">The most durable lesson from Phase 1 wasn't a code bug, it was that government URLs move without warning. All three original source URLs for DAC7, UK DPI, and Canada DPI returned 404 partway through the build. I found the current pages by hand and updated the scripts, and URL validation is now a permanent manual step in the quarterly refresh checklist rather than an assumption baked into the extraction scripts.</p>
 </section>
 
