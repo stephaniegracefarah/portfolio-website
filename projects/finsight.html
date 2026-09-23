@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Your Name]: finsight</title>
+<meta name="description" content="An AI-powered pipeline that detects and explains financial data quality issues in real SEC filings.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[Your Name]: finsight">
+<meta property="og:description" content="An AI-powered pipeline that detects and explains financial data quality issues in real SEC filings.">
+<meta property="og:image" content="../assets/img/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">[Your Name]</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html" aria-current="page">Projects</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#projects">All projects</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">finsight: catch bad data before anyone notices</h1>
+<p class="meta mt-2">Solo project, 2026, built in about two days</p>
+
+<dl class="case-study-summary">
+<dt>Problem</dt>
+<dd>Financial data teams spend real time manually investigating data quality issues (missing values, duplicate filings, metric restatements, pipeline failures) that surface only after a downstream stakeholder notices something wrong. By the time an anomaly is flagged, trust in the data is already damaged.</dd>
+<dt>What I made</dt>
+<dd>A pipeline that ingests real SEC filings for six public companies, runs the data through a three-layer anomaly detection engine, and uses Claude to write a plain-English explanation of every anomaly serious enough to matter, all surfaced in a live four-page dashboard.</dd>
+<dt>Where it is</dt>
+<dd>Live, with a public demo running on real SEC filing data for six companies.</dd>
+</dl>
+
+<p class="link-row">
+<a class="body-link external-link" href="https://finsight-demo.streamlit.app" target="_blank" rel="noopener">Try it</a>
+<a class="body-link external-link" href="https://github.com/stephaniegracefarah/finsight" target="_blank" rel="noopener">Code on GitHub</a>
+</p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The problem and the spec</h2>
+<p class="body">The core problem finsight solves: financial data quality issues usually surface only after a downstream stakeholder notices something wrong, and by then trust in the data is already damaged. finsight automates the investigation loop that normally happens by hand, from raw filing to a plain-English explanation of what actually changed and whether it matters.</p>
+<p class="body">The hardest scoping call was which companies to monitor, and six was a deliberate choice, not a shortcut. Each one stresses a different part of the pipeline: Live Nation as the anchor with the deepest filing history, StubHub as a genuine edge case (it IPO'd in 2025, so there's barely any history to work with), Sphere Entertainment because it's volatile enough to be anomaly-rich on its own.</p>
+
+<div class="stack-2 mt-2">
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col><col style="width: 100px;"></colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>Detect anomalies using a three-layer engine: rolling Z-scores per metric, Isolation Forest across all metrics at once for patterns no single metric would show, and a combined severity score</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>Call the Claude API only for HIGH and CRITICAL anomalies, not every row, so cost and signal both stay under control</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>Slack alerting, price and volume context via yfinance, and a feedback loop for retraining the anomaly model</td>
+<td>Later</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Three of the decisions, reconstructed from the project's own engineering notes.</p>
+</div>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Design</h2>
+<p class="body">There's no separate design doc for this one. The dashboard's structure came straight out of the pipeline it's built on: four pages that mirror the actual data flow, Pipeline Health (ingestion and quality checks), Anomaly Feed, Company Explorer, and Data Lineage. The goal was that anyone on a financial data team could open it and understand what's wrong without writing a single query.</p>
+<img class="figure-single" src="../assets/img/finsight-dashboard.png" alt="finsight's Pipeline Health dashboard page: six companies monitored, 435 financial records, 435 anomalies detected (8 critical), 37 AI explanations generated, and a company coverage table with real SEC filing counts per ticker.">
+<p class="caption">Pipeline Health, the landing page: coverage across all six companies and severity at a glance. Real data from the public demo.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Technical design</h2>
+<p class="body">Anomalies are scored, not just flagged. A rolling Z-score (8-quarter window, threshold of 3 standard deviations) catches per-metric outliers. An Isolation Forest runs across all eight metrics at once and catches multivariate anomalies a single metric would miss entirely, a quarter where revenue, cash, and operating income all decline together but none individually crosses its own threshold. The two combine into one severity score from 0 to 100, weighted 60 percent to the Z-score (more interpretable, metric-specific) and 40 percent to the Isolation Forest (catches what the Z-score can't), then bucketed into LOW, MEDIUM, HIGH, and CRITICAL.</p>
+
+<div class="architecture-diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="Architecture diagram: SEC EDGAR data flows through ingestion into DuckDB and dbt, then into the anomaly engine, then into the dashboard with Claude-generated explanations.">
+<g font-size="13">
+<rect class="diagram-box" x="1" y="42" width="150" height="56"></rect>
+<text class="diagram-label" x="76" y="66" text-anchor="middle">SEC EDGAR</text>
+<text class="diagram-label-muted" x="76" y="84" text-anchor="middle" font-size="10">raw filings</text>
+
+<rect class="diagram-box" x="191" y="42" width="150" height="56"></rect>
+<text class="diagram-label" x="266" y="66" text-anchor="middle">DuckDB + dbt</text>
+<text class="diagram-label-muted" x="266" y="84" text-anchor="middle" font-size="10">clean quarterly data</text>
+
+<rect class="diagram-box" x="381" y="42" width="150" height="56"></rect>
+<text class="diagram-label" x="456" y="66" text-anchor="middle">Anomaly engine</text>
+<text class="diagram-label-muted" x="456" y="84" text-anchor="middle" font-size="10">Z-score + Isolation Forest</text>
+
+<rect class="diagram-box" x="571" y="42" width="108" height="56"></rect>
+<text class="diagram-label" x="625" y="66" text-anchor="middle">Dashboard</text>
+<text class="diagram-label-muted" x="625" y="84" text-anchor="middle" font-size="10">+ Claude</text>
+
+<line class="diagram-line" x1="151" y1="70" x2="191" y2="70"></line>
+<line class="diagram-line" x1="341" y1="70" x2="381" y2="70"></line>
+<line class="diagram-line" x1="531" y1="70" x2="571" y2="70"></line>
+</g>
+</svg>
+</div>
+
+<h3 class="heading-3 mt-4">Z-score alone, or Z-score plus Isolation Forest</h3>
+<table class="data-table">
+<colgroup><col style="width: 200px;"><col><col></colgroup>
+<thead>
+<tr>
+<th>Option</th>
+<th>Why it was attractive</th>
+<th>Why I didn't pick it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Z-score only</td>
+<td>Simple and interpretable: exactly how many standard deviations off a number is</td>
+<td>Misses multivariate anomalies entirely. A quarter where revenue, cash, and operating income all decline together but none individually crosses the threshold would sail through undetected</td>
+</tr>
+<tr>
+<td>Z-score plus Isolation Forest, chosen</td>
+<td>Isolation Forest is unsupervised, so it needs no labeled training data, and catches exactly the multivariate pattern Z-score alone would miss</td>
+<td>A second, less interpretable model in the loop; the severity score has to explain itself, which is part of why the weighting favors the more interpretable Z-score component</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Stack: Python 3.11, DuckDB, dbt Core, scikit-learn, Anthropic Claude API, Streamlit, Plotly, SEC EDGAR.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Building and launching</h2>
+<p class="body">Built in about two days: ingestion and a dbt scaffold on day one, the transformation pipeline, anomaly engine, and severity scoring on day two, then a couple of small fixes (a dbt_utils test syntax issue, the EDGAR rate limit) before the write-up.</p>
+<p class="body">The best bug: the first version of the staging model selected straight from the raw facts table with no period filtering, and the anomaly detector immediately started firing constantly on Live Nation's revenue data. The data wasn't actually anomalous. SEC EDGAR stores true quarterly values and year-to-date cumulative totals in the same field with the same period end date, so a Q3 year-to-date figure sitting next to a true Q3 figure looks like a real spike to a Z-score model. The fix was a period-length filter, true quarters run close to 90 days, so filtering on period length cleanly separates quarterly from cumulative values without needing to parse a field that's inconsistently populated across companies.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Looking back</h2>
+<p class="body">The data quality tests catch the failure modes I actually expected (nulls, duplicate filings, a balance sheet that doesn't balance), but the severity scoring model doesn't have a feedback loop yet: an analyst can't tell it a flagged anomaly wasn't actually a big deal and have that adjust future scoring. That's next, along with giving the Claude explanations an investment framing instead of just an operational one, since a data quality tool and something an analyst would actually use for research turn out to be one small reframe apart.</p>
+</section>
+
+</div>
+
+<p class="body mt-6 measure-text"><a class="body-link" href="../index.html#projects">Back to all projects</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:you@yourdomain.com">[you@yourdomain.com]</a>
+<a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated [Month Year]</span>
+</footer>
+</body>
+</html>
