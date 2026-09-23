@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stephanie Farah: The agent-team brief</title>
+<meta name="description" content="The roles, rules, and checkpoints I hand a team of coding agents, excerpted from the FlexFund build.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stephanie Farah: The agent-team brief">
+<meta property="og:description" content="The roles, rules, and checkpoints I hand a team of coding agents, excerpted from the FlexFund build.">
+<meta property="og:image" content="https://stephaniegracefarah.github.io/portfolio-website/assets/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">Stephanie Farah</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html">Projects</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#documents">All documents</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">The brief I hand a build team</h1>
+<p class="meta mt-2">Excerpt from the FlexFund build, 2026. Trimmed and redacted</p>
+<p class="body mt-3">FlexFund was built by four coding agents, each with a scoped role, run by a fifth agent that never writes code. This is the document that defines them and the rules the orchestrator follows. It is the working file from the private repo, cut down to the parts that show how the build was controlled, with personal details removed.</p>
+<p class="body mt-3"><a class="body-link" href="../projects/flexfund.html">Read the FlexFund case study</a></p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The rule everything hangs on</h2>
+<p class="body">The brief opens with one sentence: the technical design is the law. If any agent hits an ambiguity or needs to deviate, it stops immediately, proposes a changelog entry describing the deviation and why, and surfaces it to the orchestrator for approval before implementing anything.</p>
+<p class="body">Seven universal rules sit under it and apply to every agent.</p>
+<table class="data-table">
+<colgroup><col></colgroup>
+<thead>
+<tr>
+<th>Universal rules</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Read the full technical design before writing any code.</td></tr>
+<tr><td>Never implement anything outside your defined scope.</td></tr>
+<tr><td>Never make a design decision that is not in the technical design. Flag it instead.</td></tr>
+<tr><td>Every file you create or modify goes in your output manifest.</td></tr>
+<tr><td>If a previous agent's output contradicts the technical design, flag it. Do not silently work around it.</td></tr>
+<tr><td>Leave a comment in the code wherever an assumption was made.</td></tr>
+<tr><td>Confirm completion with a fixed sentence: "Checkpoint [N] complete. Ready for Orchestrator review."</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="stack-3 measure-wide">
+<h2 class="heading-2">Four agents, four scopes</h2>
+<p class="body">Each agent gets a checkpoint, a scope, and an explicit list of what it does not do.</p>
+<table class="data-table">
+<colgroup><col style="width: 28%;"><col><col></colgroup>
+<thead>
+<tr>
+<th>Agent and checkpoint</th>
+<th>Owns</th>
+<th>Does not do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architect, checkpoint 0</td>
+<td>The project scaffold, login, route protection, and the first deploy</td>
+<td>Fetch any data, build UI beyond login and a blank shell, or write database functions</td>
+</tr>
+<tr>
+<td>Data layer, checkpoint 1</td>
+<td>TypeScript types for every row, query and mutation hooks, cache invalidation on every write</td>
+<td>Build UI, modify database functions, or format money</td>
+</tr>
+<tr>
+<td>UI builder, checkpoints 2 and 3</td>
+<td>The paycheck card stack, check-off, inline editing, and adding obligations</td>
+<td>Modify hooks or the data layer, or build the later trends screen</td>
+</tr>
+<tr>
+<td>QA and polish, checkpoint 4</td>
+<td>Adversarial validation against the design, installability, and a pass or fail report</td>
+<td>Add features, or fix bugs directly. Failures go back to the orchestrator with reproduction steps</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">The "does not do" column is as important as the scope. It is what keeps one agent from quietly redesigning another agent's work.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">What a system prompt looks like</h2>
+<p class="body">Every agent gets a prompt with the same shape: the job, the facts it must not re-derive, what to produce, and a check it has to run itself before reporting back. This is an excerpt from the data layer agent.</p>
+<h3 class="heading-3">Data layer agent, excerpt</h3>
+<p class="body">Your job is to create the TypeScript types and React hooks that connect the frontend to the backend. The database functions are already deployed and returning real data. Your hooks must call them correctly and handle loading and error states.</p>
+<p class="body">Key facts. All money is integer cents. Do not format to dollars in hooks. Dates come back as strings from the RPC, so type them correctly. A payment record is keyed by source type, source id, and due date.</p>
+<p class="body">Confirm: log both query hooks' results in the browser console with real data. Output a manifest.</p>
+<p class="caption">The key facts paragraph carries decisions already made on paper, so the agent does not make them again.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The QA agent is told to be adversarial</h2>
+<p class="body">The last agent's prompt says it runs last, that its job is to validate the deployed app against the technical design, and that it is adversarial: it is there to find failures. It works from a numbered checklist of fourteen criteria, and some are deliberately specific, for example that a bill named "Cat Food" shows its merchant, Chewy, while one named "Rocket Money" does not, because the merchant is already in the name.</p>
+<p class="body">For each criterion the report says pass or fail. For each fail it gives reproduction steps and expected versus actual behavior, and returns them to the orchestrator. The QA agent does not fix what it finds. Whoever finds the bug is not the one who fixes it.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The orchestrator's rules</h2>
+<p class="body">The orchestrator is also an agent, and its instructions begin by saying it does not write implementation code. It sequences agents, reviews checkpoints, and maintains the build state in a single running file.</p>
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col></colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Brief each agent with its scoped instructions and the correct inputs.</td></tr>
+<tr><td>2</td><td>Review each checkpoint against the technical design's acceptance criteria and the agent's output manifest.</td></tr>
+<tr><td>3</td><td>Never pass a failing checkpoint. Return it to the agent with specific failure notes.</td></tr>
+<tr><td>4</td><td>Log everything. Every deviation, decision, or clarification goes in the changelog.</td></tr>
+<tr><td>5</td><td>Do not write implementation code. Sequence, review, and decide.</td></tr>
+<tr><td>6</td><td>If an agent hits an ambiguity, it stops and surfaces it. The orchestrator decides, logs the decision, and adds it to the key decisions.</td></tr>
+<tr><td>7</td><td>The technical design is the law. An agent that wants to deviate proposes a changelog entry, and the orchestrator approves or rejects it.</td></tr>
+<tr><td>8</td><td>Update the build state after each checkpoint is approved.</td></tr>
+<tr><td>9</td><td>At the end of each session, update the session notes with what was completed, what is next, and any context the next session needs.</td></tr>
+</tbody>
+</table>
+<p class="caption">Rule 9 exists because every session starts with an agent that remembers nothing. The file is the memory.</p>
+</section>
+
+<section class="stack-3 measure-wide">
+<h2 class="heading-2">What the build state looked like</h2>
+<p class="body">After every checkpoint, the orchestrator updates one table. These rows are from the first two days.</p>
+<table class="data-table">
+<colgroup><col style="width: 34%;"><col style="width: 18%;"><col></colgroup>
+<thead>
+<tr>
+<th>Checkpoint</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0: scaffold, auth, deploy</td>
+<td>Approved</td>
+<td>Deployed 2026-06-02. Login and auth shell confirmed working.</td>
+</tr>
+<tr>
+<td>1: data layer and hooks</td>
+<td>Approved</td>
+<td>221 ledger rows and 14 summary rows confirmed live.</td>
+</tr>
+<tr>
+<td>2: paycheck cards, read-only</td>
+<td>Approved</td>
+<td>14 cards, merchant map, and dark theme confirmed 2026-06-03.</td>
+</tr>
+<tr>
+<td>3: check-off, editing, add</td>
+<td>Approved</td>
+<td>Check-off, variable amount input, inline edit, and add obligation confirmed.</td>
+</tr>
+<tr>
+<td>4: polish and PWA</td>
+<td>Approved</td>
+<td>14 of 14 QA criteria pass in code review. Two criteria, no horizontal scroll and installing to the home screen, still need verification on a live deploy.</td>
+</tr>
+<tr>
+<td>Security review</td>
+<td>Complete</td>
+<td>No high or medium findings. Three low findings fixed.</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Checkpoint 4 was approved with two criteria explicitly marked as unverified. The log says what was checked and what was not.</p>
+</section>
+
+</div>
+
+<div class="project-nav mt-6 measure-wide">
+<a class="body-link next-link" href="tdd-changelog.html">Next: How a spec changes</a>
+</div>
+<p class="body mt-3 measure-text"><a class="body-link" href="../index.html#documents">All documents</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:stephanie.grace.farah@gmail.com">stephanie.grace.farah@gmail.com</a>
+<a href="https://www.linkedin.com/in/stephaniegfarah/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/stephaniegracefarah" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated September 2026</span>
+</footer>
+</body>
+</html>

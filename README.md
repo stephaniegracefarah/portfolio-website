@@ -43,7 +43,7 @@ contact.html                     Email, LinkedIn, GitHub, resume, location
 projects/project-template.html   Case study template: PRD, design, TDD, build, retro
 assets/css/site.css              The one stylesheet, built on tokens.json's custom properties
 assets/img/                      Images, including og-image.png (social preview)
-docs/                            PRD and technical design doc templates (Markdown)
+documents/                       Redacted working documents: agent-team brief, spec changelog
 resume.pdf                       Resume PDF
 .nojekyll                        Tells GitHub Pages not to run Jekyll on this repo
 ```

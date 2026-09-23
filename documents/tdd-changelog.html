@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stephanie Farah: How a spec changes</title>
+<meta name="description" content="FlexFund's technical design changelog and invariants, showing what changed after building against real data and why.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stephanie Farah: How a spec changes">
+<meta property="og:description" content="FlexFund's technical design changelog and invariants, showing what changed after building against real data and why.">
+<meta property="og:image" content="https://stephaniegracefarah.github.io/portfolio-website/assets/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">Stephanie Farah</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html">Projects</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#documents">All documents</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">How a spec changes when it meets real data</h1>
+<p class="meta mt-2">Excerpt from the FlexFund technical design and its running log, 2026. Condensed and redacted</p>
+<p class="body mt-3">FlexFund's earlier design had plan and lock states, snapshots, and a planned-versus-actual comparison. Then I built the database layer with my real data, about 42 recurring expenses, real income, and real debts, and the model did not hold up. Version 3 is what remained. The changelog sits at the top of the document, so the reasons for a change travel with the plan itself.</p>
+<p class="body mt-3"><a class="body-link" href="../projects/flexfund.html">Read the FlexFund case study</a></p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-wide">
+<h2 class="heading-2">Changelog, version 2.0 to 3.0</h2>
+<p class="body">These changes came from pressure-testing the model with real data. Together they are a fundamental simplification of the architecture. The wording here is condensed from the original.</p>
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col><col></colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Change</th>
+<th>What it replaced or removed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>The app is a living projection the user updates as reality happens. Edit a template and the whole future recalculates. Check off a bill and it records what was actually paid.</td>
+<td>The entire plan and lock state machine: no locking, no snapshots, no planned versus actual, no dual chains</td>
+</tr>
+<tr>
+<td>2</td>
+<td>One rollover chain, always live.</td>
+<td>The paycheck plan table, dropped because there are no snapshots to store</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Fund Future Periods: an automatic reserve line in each paycheck where money is needed for a later deficit.</td>
+<td>The old rollover line. Every dollar now has a deliberate job</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flex Fund: the truly free money, defined as the minimum the running balance ever hits across the remaining horizon. It is the app's core metric and its name.</td>
+<td>The old "unassigned" and "to allocate" concepts</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The schedule engine runs in Postgres. Two functions, the ledger and the paycheck summary, are all the app calls. The client is a thin renderer.</td>
+<td>Schedule logic in client-side JavaScript</td>
+</tr>
+<tr>
+<td>6</td>
+<td>One income line. The savings transfer is tracked as a "Fund Myself" expense.</td>
+<td>Separate income lines for each deposit account</td>
+</tr>
+<tr>
+<td>7</td>
+<td>New expense fields: variable amount, autopay, and hidden notes revealed on tap.</td>
+<td>Nothing removed. These are additions</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Balance snapshot deferred. The MVP starts at zero plus the first paycheck's income. A "start over" flow comes after.</td>
+<td>The balance snapshot in the MVP</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Build phases dramatically simplified.</td>
+<td>The phases needed only for locking, snapshots, and dual chains</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">The original has ten items. Dropping the paycheck plan table and moving to a single chain are merged into row 2 here.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Three hard rules</h2>
+<p class="body">Right under the changelog, a short "how to read this document" section names the rules a builder cannot break. It also says to build in order, and that every phase has an acceptance check: do not advance until it passes.</p>
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col></colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>The schedule is derived, never stored. Occurrences are computed from a start date and a cadence. Writing a row for "expense X on date Y" is a bug.</td></tr>
+<tr><td>2</td><td>One living projection. There is no planned versus actual split. Recurring templates define the projection, and payment records only record what actually happened.</td></tr>
+<tr><td>3</td><td>Nothing before the seed paycheck exists. The app is forward-only.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Ten invariants</h2>
+<p class="body">An appendix at the end of the technical design lists the invariants: the things that must stay true whatever else changes.</p>
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col></colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Invariant</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>No occurrence is ever written to the database. Occurrences are derived by the ledger function.</td></tr>
+<tr><td>2</td><td>All money is integer cents end to end. Dollars exist only at the display formatter.</td></tr>
+<tr><td>3</td><td>One rollover chain, always live. No dual planned and actual chains.</td></tr>
+<tr><td>4</td><td>Fund Future Periods is the end balance minus the larger of the future balance floor and zero. It appears only when it is greater than zero.</td></tr>
+<tr><td>5</td><td>Flex Fund is the larger of zero and the lowest end balance from this paycheck forward. It is the core metric.</td></tr>
+<tr><td>6</td><td>Editing a template changes the projection on the next query. No locking, no confirmation.</td></tr>
+<tr><td>7</td><td>A payment record is purely a record of what happened. It does not affect the projection.</td></tr>
+<tr><td>8</td><td>Nothing before the seed paycheck is ever rendered or queried.</td></tr>
+<tr><td>9</td><td>One payment record per source and due date.</td></tr>
+<tr><td>10</td><td>The base line generator is internal. The app calls only the ledger and paycheck summary functions.</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="stack-3 measure-wide">
+<h2 class="heading-2">The log after the spec</h2>
+<p class="body">The spec is not finished when the build starts. The orchestrator's file carries a running changelog, and any deviation from the design is written down there with its reasoning. Three entries from the first two days:</p>
+<table class="data-table">
+<colgroup><col style="width: 120px;"><col><col style="width: 300px;"></colgroup>
+<thead>
+<tr>
+<th>Date</th>
+<th>Entry</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-06-02</td>
+<td>Merchant display through a client-side map. The ledger function returns the expense name but not the merchant. Rather than modify the deployed database function, merchant data is fetched separately from the expense table (id, name, and merchant only) and joined in the client by source id. No database change required.</td>
+<td>The deployed database function was left untouched instead of being changed mid-build</td>
+</tr>
+<tr>
+<td>2026-06-03</td>
+<td>Fix for PWA installation. On Android, Chrome offered "Add to Home Screen" instead of "Install app." Root cause: the route-protection middleware did not exclude the service worker and the manifest. Chrome's background installability check fetches those files without a session, got redirected to the login page, received HTML instead of JSON and JavaScript, and could not confirm the app was installable. The fix excluded those files from the matcher and tightened the manifest. Confirmed on a real phone.</td>
+<td>The root cause was found by looking at what the browser actually received</td>
+</tr>
+<tr>
+<td>2026-06-03</td>
+<td>Security review. A full audit of auth, hooks, database functions, components, and config found no high or medium issues. Three low findings were fixed: generic error messages in place of raw database errors, a non-negative check on all five money columns because a valid session could bypass client-side validation with a direct API call, and a config file added to the ignore list.</td>
+<td>The database constraint exists because the client check alone was not enough</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Each entry in the log states the decision, the reason, and what changed.</p>
+</section>
+
+</div>
+
+<div class="project-nav mt-6 measure-wide">
+<a class="body-link" href="agent-team.html">Previous: The agent-team brief</a>
+</div>
+<p class="body mt-3 measure-text"><a class="body-link" href="../index.html#documents">All documents</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:stephanie.grace.farah@gmail.com">stephanie.grace.farah@gmail.com</a>
+<a href="https://www.linkedin.com/in/stephaniegfarah/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/stephaniegracefarah" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated September 2026</span>
+</footer>
+</body>
+</html>
