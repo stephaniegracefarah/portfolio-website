@@ -588,6 +588,19 @@ img.figure-placeholder {
   background: var(--color-surface-subtle);
 }
 
+/* A full document page shown as an image (e.g. a PRD). The hairline keeps a
+   white page readable as a page against a white or dark background. */
+figure {
+  margin: 0;
+}
+
+.doc-page {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-hairline);
+}
+
 /* ---------- Architecture diagram / charts ---------- */
 
 .architecture-diagram {
