@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>[Your Name]: Oura Dashboard</title>
-<meta name="description" content="A personal PWA that reads Oura Ring data through the lens of cycle phase, instead of treating every day as equivalent.">
+<meta name="description" content="A personal PWA that turns raw Oura Ring data into the trends and correlations the official app doesn't show.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="[Your Name]: Oura Dashboard">
-<meta property="og:description" content="A personal PWA that reads Oura Ring data through the lens of cycle phase, instead of treating every day as equivalent.">
+<meta property="og:description" content="A personal PWA that turns raw Oura Ring data into the trends and correlations the official app doesn't show.">
 <meta property="og:image" content="../assets/img/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,14 +32,14 @@
 <p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#projects">All projects</a></p>
 
 <section class="mt-5 measure-text">
-<h1 class="display">Oura Dashboard: read every metric through your cycle</h1>
+<h1 class="display">Oura Dashboard: more signal than a daily score</h1>
 <p class="meta mt-2">Solo project, 2026, in daily personal use since May</p>
 
 <dl class="case-study-summary">
 <dt>Problem</dt>
-<dd>The Oura app surfaces data well but frames it poorly. You see scores, rings, and charts, but leave feeling either judged or indifferent, with no contextual intelligence connecting the metrics to how your body actually feels. The app treats every day as equivalent, even though your body clearly doesn't.</dd>
+<dd>Oura's ring collects an enormous amount of physiological data (HRV, sleep stages, temperature, respiratory rate, SpO2, activity, tags) and reduces almost all of it to a single daily score. As a data person, that's backwards: the raw signal is rich enough to actually teach you something about your own body, and the stock app never gets past a grade.</dd>
 <dt>What I made</dt>
-<dd>A personal dashboard that reads the same Oura data through one organizing lens: cycle phase. Every metric (HRV, sleep, readiness, activity) is interpreted relative to where you are in your cycle, not against a population average or yesterday's number.</dd>
+<dd>A dashboard that pulls the same raw Oura data and does the analysis the official app doesn't: trends across weeks and months, statistical correlations between logged symptoms and the next day's metrics, and a plain-language summary of what actually moved, not just a number.</dd>
 <dt>Where it is</dt>
 <dd>Live, installed as a PWA on my phone, in daily personal use since May 2026.</dd>
 </dl>
@@ -49,8 +49,8 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">The problem and the spec</h2>
-<p class="body">Every mainstream health tracker treats each day the same way. This one doesn't: the core constraint in the spec is that a metric is never shown without cycle-phase context, so a low deep-sleep number reads completely differently depending on whether it's typical for the current phase or genuinely unusual.</p>
-<p class="body">The hardest scoping call wasn't in the plan at all. Oura's own documented endpoint for cycle data returns a 404 in practice. The real signal turned out to live in a generic tag that only appears when a period start gets logged a specific way, not through Oura's own built-in cycle tracker. The single source of truth the spec called for needed a workaround before the first real period even arrived.</p>
+<p class="body">Oura's own app treats a huge amount of physiological data as input to one number. Readiness, HRV, sleep stages, temperature, respiratory rate, SpO2, activity, tags, all of it collapses into a score and a ring. As someone who works in analytics for a living, that felt like the wrong tradeoff: the data is detailed enough to support real trend analysis and correlation, not just a daily grade. I also just didn't like using the app. It reads like a consumer wellness product, and I wanted something that felt like a tool I'd actually built for myself.</p>
+<p class="body">The hardest scoping call turned out to be deciding what "more insight" actually means, not just building more charts. The first version of the correlation grid used a same-day Pearson correlation on raw daily values, a weak baseline: a single bad night can skew it, and same-day pairing misses anything that only shows up the next morning. Real use made the gap obvious once there was enough data to check. The Patterns screen now reports an effect size and a sample size on every finding, not just a coefficient with no sense of how much data actually backs it.</p>
 
 <div class="stack-2 mt-2">
 <table class="data-table">
@@ -65,12 +65,12 @@
 <tbody>
 <tr>
 <td>R1</td>
-<td>Every metric is interpreted through the user's current cycle phase; raw scores are never shown without that context</td>
+<td>Surface trends and statistical correlations Oura's own app doesn't: multi-week averages, symptom-to-next-day effects, and weather correlation, not just a daily score</td>
 <td>Must</td>
 </tr>
 <tr>
 <td>R2</td>
-<td>Every request proxies through an authenticated server function; the Oura access token and database credentials are never exposed to the browser</td>
+<td>Every correlation finding reports effect size and sample size, not just a coefficient, so a pattern backed by three days doesn't read the same as one backed by thirty</td>
 <td>Must</td>
 </tr>
 <tr>
@@ -86,9 +86,13 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Design</h2>
-<p class="body">The visual system is Neo-Bauhaus: a hard grid of ruled cells separated by black borders, no floating cards, no rounded corners, heavy display type for the numbers that matter most. The one rule that ties it together is that the current cycle phase carries a locked color everywhere it appears, the phase strip, the badge, the narrative block's full-bleed background, so switching phases visibly changes the whole app's personality rather than just a label somewhere.</p>
-<div class="figure-placeholder" role="img" aria-label="Screenshot of the Oura Dashboard's Neo-Bauhaus interface, pending.">[Screenshot pending]</div>
-<p class="caption">Screenshot pending.</p>
+<p class="body">The visual system is Neo-Bauhaus on purpose: a hard grid of ruled, black-bordered cells, heavy display type, no rounded corners, none of the soft consumer-wellness look Oura's own app has. Numbers are the largest thing on any screen, and nothing is styled to feel comforting instead of informative.</p>
+<p class="body">Correlation findings get their own visual treatment: a colored dot for signal strength, with the effect size and sample size printed right on the card in plain language, above the statistics rather than instead of them.</p>
+<div class="figure-row">
+<img class="figure-placeholder" src="../assets/img/Oura-Dash-Screen-trends1.png" alt="The Trends tab: average readiness, HRV, and resting heart rate for the past week versus the prior week, a sleep-stage bar chart across six nights, and total steps and movement time.">
+<img class="figure-placeholder" src="../assets/img/Oura-Dash-Screen-patterns.png" alt="The Patterns screen: three correlation cards reporting a signal-strength dot, effect size, and sample size, e.g. Sore Throat same-day effect on energy: down 23 percent, d = -1.05, n = 10.">
+</div>
+<p class="caption">Left: the Trends tab, weekly averages against the prior period. Right: the Patterns screen, statistically scored correlations between logged symptoms and next-day metrics.</p>
 </section>
 
 <section class="stack-3 measure-text">
@@ -155,7 +159,7 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Looking back</h2>
-<p class="body">The one gap I still work around by hand: Oura's own built-in period tracker doesn't write to the tag data the cycle engine reads at all, only a specific manual tag does. I found this out the way you'd expect, by actually getting a period, marking it in the Oura app, and watching the pipeline not notice. The fix (a dedicated table and a button in the app instead of a manual database insert) is designed but not built yet, so for now every cycle still starts with me typing a row into the database by hand. It's a good reminder that a single source of truth is only as true as the one path you actually tested.</p>
+<p class="body">The Trends tab is the densest screen in the app, and my first instinct was to trim it down for mobile. I didn't, on purpose: it's the part I actually open the app for, the raw signal turned into something I can act on, and cutting content to make the screen look calmer would have traded away the one thing I built this for. The right fix is better grouping and collapsible sections, not less data, and that's still on the list.</p>
 </section>
 
 </div>
