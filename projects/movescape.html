@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MoveScape — [Your Name]</title>
+<title>[Your Name]: MoveScape</title>
 <meta name="description" content="A browser app that turns webcam-tracked movement into deterministic, seeded generative art.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="MoveScape — [Your Name]">
+<meta property="og:title" content="[Your Name]: MoveScape">
 <meta property="og:description" content="A browser app that turns webcam-tracked movement into deterministic, seeded generative art.">
 <meta property="og:image" content="../assets/img/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,9 +37,9 @@
 
 <dl class="case-study-summary">
 <dt>Problem</dt>
-<dd>People who don't naturally enjoy exercise lack a reason to move. Every mainstream fitness-motivation tool — streaks, badges, leaderboards — is generic, judgmental, and disposable.</dd>
+<dd>People who don't naturally enjoy exercise lack a reason to move. Every mainstream fitness-motivation tool (streaks, badges, leaderboards) is generic, judgmental, and disposable.</dd>
 <dt>What I made</dt>
-<dd>A browser app that watches how you move through your webcam and turns three qualities of your movement — openness, speed, symmetry — into a deterministic, seeded generative artwork that grows in real time as you move.</dd>
+<dd>A browser app that watches how you move through your webcam and turns three qualities of your movement (openness, speed, symmetry) into a deterministic, seeded generative artwork that grows in real time as you move.</dd>
 <dt>Where it is</dt>
 <dd>In progress. Milestones M0 through M5 are built and merged: capture, the seed system, the engine, the first art style, sessions and saving. Not deployed publicly yet.</dd>
 </dl>
@@ -53,7 +53,7 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">The problem and the spec</h2>
-<p class="body">The idea started as a fitness-motivation problem: gamified rewards are generic, judgmental about missed days, and lose all meaning once earned. MoveScape answers it differently — the art is made of the movement itself, so the reward keeps its value and the psychological burden of "I should exercise" never has to show up at the door.</p>
+<p class="body">The idea started as a fitness-motivation problem: gamified rewards are generic, judgmental about missed days, and lose all meaning once earned. MoveScape answers it differently: the art is made of the movement itself, so the reward keeps its value, and the psychological burden of "I should exercise" never has to show up at the door.</p>
 <p class="body">The hardest scoping call was who v1 is for: one person, by name, matching the target psychology exactly. Keeping the audience that narrow kept the spec honest about what v1 actually needs to prove, instead of building for a hypothetical audience of strangers before the experience was validated for one real user.</p>
 
 <div class="stack-2 mt-2">
@@ -69,12 +69,12 @@
 <tbody>
 <tr>
 <td>R1</td>
-<td>Live canvas driven by webcam pose tracking — expansion, speed and symmetry visibly shape the art within a frame or two of moving</td>
+<td>Live canvas driven by webcam pose tracking: expansion, speed and symmetry visibly shape the art within a frame or two of moving</td>
 <td>Must</td>
 </tr>
 <tr>
 <td>R2</td>
-<td>A seed system producing deterministic, reconstructable worlds end to end — the piece most other decisions had to protect, since retrofitting determinism later would mean a rewrite</td>
+<td>A seed system producing deterministic, reconstructable worlds end to end: the piece most other decisions had to protect, since retrofitting determinism later would mean a rewrite</td>
 <td>Must</td>
 </tr>
 <tr>
@@ -90,8 +90,8 @@
 
 <section class="stack-3 measure-wide">
 <h2 class="heading-2">Design</h2>
-<p class="body">The visual language went through a full discover-to-deliver design process, landing on a system I call "Typewriter Utility": the artwork supplies all color, the UI supplies none. Every button and label renders in one ink color on the canvas's own paper tone, and the canvas itself is the page — full-bleed, edge to edge.</p>
-<p class="body">The biggest addition came out of a simple question: how do you prove the art is really following you, not just decorating your session? "Show the magic" answers it directly — a panel that shows the actual function driving the growth you're watching, with that tick's real argument values annotated inline, live.</p>
+<p class="body">The visual language went through a full discover-to-deliver design process, landing on a system I call "Typewriter Utility": the artwork supplies all color, the UI supplies none. Every button and label renders in one ink color on the canvas's own paper tone, and the canvas itself is the page: full-bleed, edge to edge.</p>
+<p class="body">The biggest addition came out of a simple question: how do you prove the art is really following you, not just decorating your session? "Show the magic" answers it directly: a panel that shows the actual function driving the growth you're watching, with that tick's real argument values annotated inline, live.</p>
 <div class="figure-row">
 <img class="figure-placeholder" src="../assets/img/movescape-live.png" alt="MoveScape mid-session: a full-bleed canvas of branching botanical growth in dark red and cream, with minimal bracket-style controls (Pause, Finish, Restart) floating over it.">
 <img class="figure-placeholder" src="../assets/img/movescape-show-the-magic.png" alt="The same session with the &quot;Show the magic&quot; panel open, displaying the real growthStepFor function and this tick's live speed, expansion and symmetry values.">
@@ -101,7 +101,7 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Technical design</h2>
-<p class="body">The architecture's one hard rule: everything generative is deterministic from a seed. A finished piece is fully described by a tiny recipe — style, choices, seed, and the recorded movement — and can be perfectly reconstructed from it, at any resolution, forever. That single requirement shaped almost everything else: a fixed-timestep simulation driven by the recording's own clock rather than wall time, sample-and-hold playback pinned by a versioned recipe format, and a hard ban on unseeded randomness anywhere in the world or rendering layers.</p>
+<p class="body">The architecture's one hard rule: everything generative is deterministic from a seed. A finished piece is fully described by a tiny recipe (style, choices, seed, and the recorded movement) and can be perfectly reconstructed from it, at any resolution, forever. That single requirement shaped almost everything else: a fixed-timestep simulation driven by the recording's own clock rather than wall time, sample-and-hold playback pinned by a versioned recipe format, and a hard ban on unseeded randomness anywhere in the world or rendering layers.</p>
 
 <div class="architecture-diagram">
 <svg viewBox="0 0 680 140" role="img" aria-label="Architecture diagram: input adapters produce a MovementParams vector, consumed by the world and seed layer, which feeds the style renderer. All three layers run in the browser, with no backend.">
@@ -125,7 +125,7 @@
 <text class="diagram-label-muted" x="464" y="60" text-anchor="middle" font-size="11">World</text>
 </g>
 </svg>
-<p class="caption">All three layers run in the browser. There is no backend — only the static assets and the pose model are ever fetched over the network.</p>
+<p class="caption">All three layers run in the browser. There is no backend; only the static assets and the pose model are ever fetched over the network.</p>
 </div>
 
 <h3 class="heading-3 mt-4">Keeping pose tracking accurate off-screen</h3>
@@ -142,7 +142,7 @@
 <tr>
 <td>Pin video and canvas together in the viewport</td>
 <td>Simple, and already proven to work in an earlier proof of concept</td>
-<td>Ties tracking quality to DOM visibility — browsers throttle frame delivery to video elements that scroll off-screen, which rules out a full-bleed canvas and any future mobile layout</td>
+<td>Ties tracking quality to DOM visibility: browsers throttle frame delivery to video elements that scroll off-screen, which rules out a full-bleed canvas and any future mobile layout</td>
 </tr>
 <tr>
 <td>Decouple capture from layout, chosen</td>
@@ -155,12 +155,12 @@
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Building and launching</h2>
-<p class="body">I'm building this with an AI coding agent doing the implementation, working milestone by milestone against the spec and a running handoff log, with every part reviewed against a fixed list of invariants before it merges. Real bugs showed up at real scale: a frame rate that quietly collapsed from 58fps to 6fps over a three-minute session, and later a stranger one — content fading and reappearing that took a recorded video, frame-by-frame extraction, and a 60-seed simulation sweep to actually root-cause. It turned out to be a canvas alpha state leak, not the compositing-order bug it first looked like. Both are fixed and verified live.</p>
+<p class="body">I'm building this with an AI coding agent doing the implementation, working milestone by milestone against the spec and a running handoff log, with every part reviewed against a fixed list of invariants before it merges. Real bugs showed up at real scale: a frame rate that quietly collapsed from 58fps to 6fps over a three-minute session, and later a stranger one: content fading and reappearing that took a recorded video, frame-by-frame extraction, and a 60-seed simulation sweep to actually root-cause. It turned out to be a canvas alpha state leak, not the compositing-order bug it first looked like. Both are fixed and verified live.</p>
 </section>
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Looking back</h2>
-<p class="body">The spec's two-tier structure — one document for what the system should be, a separate running log for where the build actually stands — has held up better than I expected; deviations get written down with their reasoning instead of silently drifting from the plan. What I'd revisit: the "seed world" idea felt right on paper and is now genuinely up for debate once real movement got mapped onto it — some decisions only test themselves once you're standing in front of the thing.</p>
+<p class="body">The spec's two-tier structure (one document for what the system should be, a separate running log for where the build actually stands) has held up better than I expected; deviations get written down with their reasoning instead of silently drifting from the plan. What I'd revisit: the "seed world" idea felt right on paper and is now genuinely up for debate once real movement got mapped onto it. Some decisions only test themselves once you're standing in front of the thing.</p>
 </section>
 
 </div>
