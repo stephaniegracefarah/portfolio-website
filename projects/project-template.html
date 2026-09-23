@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Project name] — [Your Name]</title>
+<meta name="description" content="[One sentence: the problem, and who has it.]">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[Project name] — [Your Name]">
+<meta property="og:description" content="[One sentence: the problem, and who has it.]">
+<meta property="og:image" content="../assets/img/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">[Your Name]</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html" aria-current="page">Work</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#work">All projects</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">[Project name]: [what it does in a few words]</h1>
+<p class="meta mt-2">Solo project, [2025], [about three months]</p>
+
+<dl class="case-study-summary">
+<dt>Problem</dt>
+<dd>[One sentence: the problem, and who has it.]</dd>
+<dt>What I made</dt>
+<dd>[One sentence: what it does and how it's built.]</dd>
+<dt>Where it is</dt>
+<dd>[Live with N users, or shipped and archived, or in progress. Be honest.]</dd>
+</dl>
+
+<p class="link-row">
+<a class="body-link external-link" href="https://example.org/" target="_blank" rel="noopener">Try it</a>
+<a class="body-link external-link" href="https://github.com/" target="_blank" rel="noopener">Code on GitHub</a>
+<a class="body-link" href="../docs/example-prd.pdf">Full PRD (PDF)</a>
+<a class="body-link" href="../docs/example-tdd.pdf">Full technical design (PDF)</a>
+</p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The problem and the PRD</h2>
+<p class="body">[Two or three sentences: why this problem, who it's for, and what success looks like. Mention anything you learned talking to people before writing it down.]</p>
+<p class="body">[One sentence on the hardest scoping call: what you cut and why.]</p>
+
+<div class="stack-2 mt-2">
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col><col style="width: 100px;"></colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>[A user can do the core thing in under a minute]</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>[The requirement that shaped the most decisions]</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>[Something useful you deliberately left for later]</td>
+<td>Later</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Three of the [N] requirements, from the PRD. <a class="ink-muted" style="text-underline-offset: 3px;" href="../docs/example-prd.pdf">Read the full document</a>.</p>
+</div>
+</section>
+
+<section class="stack-3 measure-wide">
+<h2 class="heading-2">Design</h2>
+<p class="body">[Two or three sentences: how the design went from first sketch to final. Name one thing that changed after you tested it with someone.]</p>
+<div class="figure-row">
+<div class="figure-placeholder" role="img" aria-label="Early wireframe">[Early wireframe]</div>
+<div class="figure-placeholder" role="img" aria-label="Final screen">[Final screen]</div>
+</div>
+<p class="caption">[Left: the first wireframe. Right: what shipped, and what changed in between.]</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Technical design</h2>
+<p class="body">[Two or three sentences: the shape of the system and the constraint that drove it, e.g. it had to run for free on a static host.]</p>
+
+<div class="architecture-diagram">
+<svg viewBox="0 0 680 200" role="img" aria-label="Architecture diagram placeholder: client, API, database and a scheduled job.">
+<g font-size="14">
+<rect class="diagram-box" x="1" y="70" width="140" height="56"></rect>
+<text class="diagram-label" x="71" y="103" text-anchor="middle">[Web client]</text>
+
+<rect class="diagram-box" x="241" y="70" width="140" height="56"></rect>
+<text class="diagram-label" x="311" y="103" text-anchor="middle">[API]</text>
+
+<rect class="diagram-box" x="481" y="70" width="160" height="56"></rect>
+<text class="diagram-label" x="561" y="103" text-anchor="middle">[Database]</text>
+
+<rect class="diagram-box-muted" x="241" y="0" width="140" height="44" stroke-dasharray="4 3"></rect>
+<text class="diagram-label-muted" x="311" y="27" text-anchor="middle">[Nightly job]</text>
+
+<line class="diagram-line" x1="141" y1="98" x2="241" y2="98"></line>
+<line class="diagram-line" x1="381" y1="98" x2="481" y2="98"></line>
+
+<line class="diagram-line-muted" x1="381" y1="22" x2="561" y2="22"></line>
+<line class="diagram-line-muted" x1="561" y1="22" x2="561" y2="70"></line>
+
+<text class="diagram-label-muted" x="191" y="90" text-anchor="middle" font-size="12">[HTTPS]</text>
+<text class="diagram-label-muted" x="431" y="90" text-anchor="middle" font-size="12">[SQL]</text>
+</g>
+</svg>
+<p class="caption">[System overview, from the technical design doc.] <a class="ink-muted" style="text-underline-offset: 3px;" href="../docs/example-tdd.pdf">Read the full document</a>.</p>
+</div>
+
+<h3 class="heading-3 mt-4">[The biggest technical decision]</h3>
+<table class="data-table">
+<colgroup><col style="width: 160px;"><col><col></colgroup>
+<thead>
+<tr>
+<th>Option</th>
+<th>Why it was attractive</th>
+<th>Why I didn't pick it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[Option A]</td>
+<td>[Its main advantage]</td>
+<td>[The cost that ruled it out]</td>
+</tr>
+<tr>
+<td>[Option B, chosen]</td>
+<td>[Why it fit the requirements best]</td>
+<td>[The trade-off I accepted]</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Building and launching</h2>
+<p class="body">[Two or three sentences: how you built it (in small slices, tests, deploy), and where reality departed from the plan.]</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Looking back</h2>
+<p class="body">[One or two honest sentences: what the PRD or TDD got right, what it missed, and what you'd do differently next time.]</p>
+</section>
+
+</div>
+
+<p class="body mt-6 measure-text">Next project: <a class="body-link" href="../index.html#work">[Project name]</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:you@yourdomain.com">[you@yourdomain.com]</a>
+<a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated [Month Year]</span>
+</footer>
+</body>
+</html>

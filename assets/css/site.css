@@ -245,6 +245,7 @@ a:focus-visible {
 .mt-2 { margin-top: var(--space-2); }
 .mt-3 { margin-top: var(--space-3); }
 .mt-4 { margin-top: var(--space-4); }
+.mt-5 { margin-top: var(--space-5); }
 .mt-6 { margin-top: var(--space-6); }
 
 /* ---------- Site header ---------- */
@@ -555,6 +556,36 @@ body {
 .architecture-diagram svg {
   width: 100%;
   height: auto;
+}
+
+.architecture-diagram svg text {
+  font-family: var(--font-sans);
+}
+
+.diagram-box {
+  fill: none;
+  stroke: var(--color-ink);
+}
+
+.diagram-box-muted {
+  fill: none;
+  stroke: var(--color-ink-muted);
+}
+
+.diagram-line {
+  stroke: var(--color-ink);
+}
+
+.diagram-line-muted {
+  stroke: var(--color-ink-muted);
+}
+
+.diagram-label {
+  fill: var(--color-ink);
+}
+
+.diagram-label-muted {
+  fill: var(--color-ink-muted);
 }
 
 /* ---------- 404 ---------- */
