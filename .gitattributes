@@ -1,0 +1,13 @@
+# Never let git touch line endings in binary files.
+*.pdf -text
+*.png -text binary
+*.jpg -text binary
+*.jpeg -text binary
+*.gif -text binary
+*.webp -text binary
+*.avif -text binary
+*.ico -text binary
+*.woff -text binary
+*.woff2 -text binary
+*.ttf -text binary
+*.otf -text binary
