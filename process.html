@@ -51,13 +51,13 @@
 
 <div class="stack-2">
 <h2 class="heading-2">Write the technical design</h2>
-<p class="body">The technical design doc is the one document I hold every build agent to: the system shape, the data model, and an options table for each decision with a real trade-off, like choosing a computed field over an extracted one. If an agent hits an ambiguity the TDD doesn't answer, it stops and asks instead of guessing.</p>
+<p class="body">The technical design doc is the one document I hold every build agent to: the system shape, the data model, and an options table for each decision with a real trade-off, like choosing a computed field over an extracted one. If an agent hits an ambiguity the TDD doesn't answer, it stops and asks instead of guessing. The TDD also carries its own running change and status log, so a deviation from the plan gets written down with its reasoning right where the plan lives, instead of drifting quietly away from what's documented.</p>
 <p class="meta">Produces: a technical design doc with an options table for each big decision. Example: taxsight</p>
 </div>
 
 <div class="stack-2">
 <h2 class="heading-2">Build in small slices</h2>
-<p class="body">I build in checkpoints, not one long session: a coordinator plans each phase against the spec, hands the work to a fresh agent, and I approve or reject before the next phase starts. Everything ships small and often, whether that means a milestone a day or, for the project I use every morning, a build session every time something real comes up.</p>
+<p class="body">I build using what I call the orchestrator model: a coordinator agent plans each phase against the spec, hands the work to a fresh builder agent, and reviews the output, including its unit tests, against acceptance criteria before I approve the next phase. Nothing moves on without its tests passing; that's usually where a bad assumption actually gets caught, not in a demo. Everything ships small and often, whether that means a milestone a day or, for the project I use every morning, a build session every time something real comes up.</p>
 <p class="meta">Produces: working software, deployed early and often. Example: Oura Dashboard</p>
 </div>
 
