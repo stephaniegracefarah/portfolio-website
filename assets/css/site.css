@@ -544,6 +544,17 @@ body {
   color: var(--color-ink-muted);
 }
 
+/* A real content image standing in the same two-up figure row. */
+img.figure-placeholder {
+  flex: 1 1 240px;
+  aspect-ratio: auto;
+  width: calc(50% - var(--space-4) / 2);
+  height: auto;
+  object-fit: contain;
+  padding: 0;
+  background: var(--color-surface-subtle);
+}
+
 /* ---------- Architecture diagram / charts ---------- */
 
 .architecture-diagram {
