@@ -18,7 +18,7 @@ Then open `http://localhost:8000` in a browser. Every page works with JavaScript
 2. Fill in every `[bracketed placeholder]` in that file: title, dates, the problem/what-I-made/where-it-is summary, requirements table, design section, architecture diagram, technical decision table, and the two closing sections.
 3. Add the project's real PDFs to `docs/` (e.g. `docs/my-project-prd.pdf`, `docs/my-project-tdd.pdf`) and update the `href`s in the new page's link row and requirements/technical-design captions to point at them.
 4. Add a real screenshot or diagram in place of the two `.figure-placeholder` divs in the Design section, with real `alt` text.
-5. Add a card for it on `index.html` in the `#work` section (copy one `<article class="project-card">` block, update the title, outcome, meta line and the link's `href`).
+5. Add a card for it on `index.html` in the `#projects` section (copy one `<article class="project-card">` block, update the title, outcome, meta line and the link's `href`).
 6. If you now have more than one project, update the "Next project" link at the bottom of each project page to point at the next one in sequence.
 
 ## Turn on GitHub Pages
