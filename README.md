@@ -19,7 +19,7 @@ Then open `http://localhost:8000` in a browser. Every page works with JavaScript
 3. Add the project's real PDFs to `docs/` (e.g. `docs/my-project-prd.pdf`, `docs/my-project-tdd.pdf`) and update the `href`s in the new page's link row and requirements/technical-design captions to point at them.
 4. Add a real screenshot or diagram in place of the two `.figure-placeholder` divs in the Design section, with real `alt` text.
 5. Add a card for it on `index.html` in the `#projects` section (copy one `<article class="project-card">` block, update the title, outcome, meta line and the link's `href`).
-6. If you now have more than one project, update the "Next project" link at the bottom of each project page to point at the next one in sequence.
+6. Wire up the Previous/Next links at the bottom of the page (`.project-nav`), and update the two neighboring project pages' links so the sequence stays correct: the project that used to be last needs a "Next" link added, and your new project needs both a "Previous" (pointing at it) and, unless it's now last, a "Next".
 
 ## Turn on GitHub Pages
 

@@ -436,6 +436,23 @@ body {
   row-gap: var(--space-2);
 }
 
+/* Previous/next project nav: previous sits left, next is pushed to the
+   far right via margin-left: auto (works whether or not previous exists),
+   so position alone signals direction. No arrows on these, they're
+   internal links. */
+.project-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: 17px;
+  line-height: 26px;
+}
+
+.project-nav .next-link {
+  margin-left: auto;
+  text-align: right;
+}
+
 /* ---------- Contact list ---------- */
 
 .contact-list {
