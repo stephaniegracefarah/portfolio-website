@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>[Your Name]: Process</title>
+<title>Stephanie Farah: Process</title>
 <meta name="description" content="How I build personal projects: PRD, design, technical design, build, and a look back.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="[Your Name]: Process">
+<meta property="og:title" content="Stephanie Farah: Process">
 <meta property="og:description" content="How I build personal projects: PRD, design, technical design, build, and a look back.">
 <meta property="og:image" content="assets/img/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
-<a class="site-name" href="index.html">[Your Name]</a>
+<a class="site-name" href="index.html">Stephanie Farah</a>
 <nav class="site-nav" aria-label="Main">
 <a href="index.html">Projects</a>
 <a href="process.html" aria-current="page">Process</a>
@@ -31,7 +31,7 @@
 
 <section class="hero stack-3 measure-text section">
 <h1 class="display">How I build things</h1>
-<p class="body">[Two or three sentences in your own words on why you work this way, e.g. most failed projects I've seen at work failed on the problem, not the code. So I write the problem down first.]</p>
+<p class="body">Most failed projects I've seen, at work and in my own builds, fail on the problem, not the code. So I write the problem down first, make the hard technical calls on paper, and only then start building, whether that's me at a keyboard or a team of AI agents I'm directing.</p>
 </section>
 
 <section class="section measure-text">
@@ -39,32 +39,32 @@
 
 <div class="stack-2">
 <h2 class="heading-2">Write the PRD</h2>
-<p class="body">[What goes in yours: the problem, who it's for, what success means, requirements with priorities, and what's out of scope. How long it usually is.]</p>
-<p class="meta">Produces: a one-to-three page PRD. Example: [Project name]</p>
+<p class="body">The PRD states the problem, who has it, what success looks like, and a short requirements table with priorities, Must versus Later. It's rarely more than a page or two. The hardest part is always the same: deciding what's explicitly out of scope, so the build doesn't quietly grow past what the problem actually needs.</p>
+<p class="meta">Produces: a one-to-three page PRD. Example: FlexFund</p>
 </div>
 
 <div class="stack-2">
 <h2 class="heading-2">Design before building</h2>
-<p class="body">[How you design: sketches, wireframes, a clickable mockup. How you test it, even informally, before committing.]</p>
-<p class="meta">Produces: wireframes and final screens</p>
+<p class="body">For a personal tool, design means deciding what the interface should feel like before any component exists: a visual language, a few real screens, sometimes a rendered style guide I check against as I build. I don't user-test these the way I would at work; the real test is whether I actually want to open the thing every day.</p>
+<p class="meta">Produces: wireframes and final screens. Example: MoveScape</p>
 </div>
 
 <div class="stack-2">
 <h2 class="heading-2">Write the technical design</h2>
-<p class="body">[What goes in your TDD: the system shape, data model, the two or three decisions with real trade-offs, and what could go wrong.]</p>
-<p class="meta">Produces: a technical design doc with an options table for each big decision</p>
+<p class="body">The technical design doc is the one document I hold every build agent to: the system shape, the data model, and an options table for each decision with a real trade-off, like choosing a computed field over an extracted one. If an agent hits an ambiguity the TDD doesn't answer, it stops and asks instead of guessing.</p>
+<p class="meta">Produces: a technical design doc with an options table for each big decision. Example: taxsight</p>
 </div>
 
 <div class="stack-2">
 <h2 class="heading-2">Build in small slices</h2>
-<p class="body">[How you break the work down, how you test, and how you ship early.]</p>
-<p class="meta">Produces: working software, deployed early and often</p>
+<p class="body">I build in checkpoints, not one long session: a coordinator plans each phase against the spec, hands the work to a fresh agent, and I approve or reject before the next phase starts. Everything ships small and often, whether that means a milestone a day or, for the project I use every morning, a build session every time something real comes up.</p>
+<p class="meta">Produces: working software, deployed early and often. Example: Oura Dashboard</p>
 </div>
 
 <div class="stack-2">
 <h2 class="heading-2">Look back</h2>
-<p class="body">[What you check after launch, and how you feed it into the next PRD.]</p>
-<p class="meta">Produces: a short retro added to the project page</p>
+<p class="body">Every project ends with an honest retro: what the plan got right, what it missed, and the bug that took too long to find. finsight's anomaly detector fired constantly in its first version, not because the data was wrong, but because I hadn't filtered out year-to-date values sitting next to true quarterly ones. That kind of finding is what keeps the next PRD from repeating the same mistake.</p>
+<p class="meta">Produces: a short retro added to the project page. Example: finsight</p>
 </div>
 
 </div>

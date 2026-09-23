@@ -383,12 +383,12 @@ body {
 
 .project-card a {
   color: var(--color-ink);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 6px;
 }
 
 .project-card a:hover {
-  text-decoration: underline;
-  text-underline-offset: 6px;
+  color: var(--color-accent);
 }
 
 /* ---------- CaseStudyHeader / summary ---------- */
