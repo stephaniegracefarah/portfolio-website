@@ -163,11 +163,14 @@
 </tr>
 </tbody>
 </table>
+<p class="caption">Stack: TypeScript, Vite, MediaPipe Tasks (PoseLandmarker), Web Workers, Canvas 2D, IndexedDB, Vitest, ESLint, GitHub Actions.</p>
 </section>
 
 <section class="stack-3 measure-text">
 <h2 class="heading-2">Building and launching</h2>
-<p class="body">I'm building this with an AI coding agent doing the implementation, working milestone by milestone against the spec and a running handoff log, with every part reviewed against a fixed list of invariants before it merges. Real bugs showed up at real scale: a frame rate that quietly collapsed from 58fps to 6fps over a three-minute session, and later a stranger one: content fading and reappearing that took a recorded video, frame-by-frame extraction, and a 60-seed simulation sweep to actually root-cause. It turned out to be a canvas alpha state leak, not the compositing-order bug it first looked like. Both are fixed and verified live.</p>
+<p class="body">I built this with AI coding agents doing the implementation. A coordinator agent breaks each milestone into tasks, assigns them to builder agents, checks their work against acceptance criteria and a fixed list of invariants, and updates a running handoff log. Each milestone gets its own branch and PR, merged only after I've tested it live, with CI running lint, typecheck, tests, and a build on every push.</p>
+<p class="body">The best example of what went wrong, and what I changed because of it: marks in a piece would fade out, then sometimes come back after a burst of movement. I spent several sessions chasing paint-order bugs in the compositor, each one a real bug, each fix feeling like progress, which is exactly what kept me looking in the wrong place. The actual cause was a Canvas2D alpha state leak: a low-opacity element drawn last left the canvas's global opacity set, so an entire layer could composite at 4%. The clue had been there from day one (marks coming back can't be explained by pixels getting permanently overwritten), and the bug took under 40 minutes to find once I built a detector for the actual symptom, content vanishing between frames, after about five hours comparing renders against a reference.</p>
+<p class="body">What changed afterward: the first tool for a visible bug is now an automated detector of that symptom, not a guess. Every hypothesis has to explain every observed symptom before a fix ships. And any rendering pass that touches shared canvas state has to restore it, backed by a regression test.</p>
 </section>
 
 <section class="stack-3 measure-text">
