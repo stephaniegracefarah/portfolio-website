@@ -523,6 +523,11 @@ body {
   color: var(--color-ink-muted);
 }
 
+img.headshot-placeholder {
+  padding: 0;
+  object-fit: cover;
+}
+
 /* ---------- Figures (design section) ---------- */
 
 .figure-row {
