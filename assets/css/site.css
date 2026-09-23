@@ -555,6 +555,17 @@ img.figure-placeholder {
   background: var(--color-surface-subtle);
 }
 
+/* A single standalone screenshot (e.g. a phone-shaped mobile screen),
+   rather than the two-up figure-row comparison layout. */
+.figure-single {
+  margin-top: var(--space-2);
+  display: block;
+  width: auto;
+  max-width: 280px;
+  height: auto;
+  background: var(--color-surface-subtle);
+}
+
 /* ---------- Architecture diagram / charts ---------- */
 
 .architecture-diagram {

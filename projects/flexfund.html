@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Your Name]: FlexFund</title>
+<meta name="description" content="A mobile-first PWA that turns recurring bills and income into paycheck-by-paycheck cash-flow cards.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[Your Name]: FlexFund">
+<meta property="og:description" content="A mobile-first PWA that turns recurring bills and income into paycheck-by-paycheck cash-flow cards.">
+<meta property="og:image" content="../assets/img/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">[Your Name]</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html" aria-current="page">Projects</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#projects">All projects</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">FlexFund: know what you can actually spend</h1>
+<p class="meta mt-2">Solo project, 2026, built in under 48 hours</p>
+
+<dl class="case-study-summary">
+<dt>Problem</dt>
+<dd>Paycheck-to-paycheck budgeting has one real question a spreadsheet never made simple: will I have enough to cover my bills before my next paycheck, given that bills don't land evenly across pay periods?</dd>
+<dt>What I made</dt>
+<dd>A mobile-first PWA that turns recurring bills and income into paycheck-by-paycheck cards, and computes the one number that actually matters: the minimum your balance will hit across every future paycheck, not just this one.</dd>
+<dt>Where it is</dt>
+<dd>Live and in personal use, with a public interactive demo account.</dd>
+</dl>
+
+<p class="link-row">
+<a class="body-link external-link" href="https://flexfund-blue.vercel.app/login" target="_blank" rel="noopener">Try it</a>
+</p>
+<p class="caption mt-2">Demo login: demo@flexfund.app, password flexfund2026. Uses an average NYC budget, fully interactive, resets anytime.</p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The problem and the spec</h2>
+<p class="body">FlexFund exists to answer one question a spreadsheet never made simple: will I have enough before my next paycheck? The real constraint driving the whole design is that bills cluster unevenly across pay periods. Some paychecks run a surplus, some run a deficit, and the two pair up naturally. A number that only looks at the current paycheck misses that entirely.</p>
+<p class="body">The hardest scoping call came after the database was already built with real data. The original design had locking, snapshots, and a planned-versus-actual split, borrowed from traditional budgeting apps. Building it against real bills showed that ceremony wasn't earning its cost for a single user who just wants to know what's true right now, so the whole state machine got cut in favor of one living projection: edit a bill, and the entire future recalculates.</p>
+
+<div class="stack-2 mt-2">
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col><col style="width: 100px;"></colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>Every paycheck shows the Flex Fund: the minimum the running balance will hit across every future paycheck, not just the current one</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>The schedule is derived, never stored. Editing a recurring bill recalculates the entire future projection instantly, with no locking and no snapshots</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>Debt paydown timelines and spend-trend analysis, both already possible from data that's already seeded</td>
+<td>Later</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Three of the decisions from the spec. The full technical design doc stays private for now.</p>
+</div>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Design</h2>
+<p class="body">The visual identity is dark charcoal with a single indigo accent, deliberately plain: no icons, no color-coding beyond what the numbers already mean (red for a deficit, green for income). The real design work went into what a paycheck card shows and in what order: start balance, income, money set aside for yourself, every other bill by due date, then the automatic reserve for future deficit periods, then the ending balance. That order is the whole mental model made visible.</p>
+<p class="body">One decision that stayed deliberately restrained: the deficit callout on a heavy paycheck is subtle, not a warning. A paycheck running a deficit that the rollover still covers isn't a problem, so the design treats it as neutral information rather than an alarm, closer to how the money actually behaves than how a typical budgeting app frames it.</p>
+<img class="figure-single" src="../assets/img/flexfund-login.png" alt="FlexFund's login screen: dark charcoal background, the FlexFund wordmark in cream, and two plain input fields with a solid indigo sign-in button.">
+
+<p class="caption">The entry point. The paycheck-card view itself is easiest to see live, via the demo link above.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Technical design</h2>
+<p class="body">The schedule engine runs entirely in Postgres, not the client. Two functions, get_ledger and get_paycheck_summary, do all the work: deriving every bill occurrence from its recurring template, computing the running balance, and injecting an automatic reserve line wherever a future paycheck would otherwise run short. The client calls both functions and renders what comes back. There's no client-side date math at all.</p>
+
+<div class="architecture-diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="Architecture diagram: the Next.js client calls two Postgres functions, get_ledger and get_paycheck_summary, which read and write the Postgres tables. No schedule computation happens on the client.">
+<g font-size="14">
+<rect class="diagram-box" x="1" y="42" width="170" height="56"></rect>
+<text class="diagram-label" x="86" y="66" text-anchor="middle">Client</text>
+<text class="diagram-label-muted" x="86" y="84" text-anchor="middle" font-size="11">Next.js, renders only</text>
+
+<rect class="diagram-box" x="255" y="42" width="190" height="56"></rect>
+<text class="diagram-label" x="350" y="66" text-anchor="middle">Postgres functions</text>
+<text class="diagram-label-muted" x="350" y="84" text-anchor="middle" font-size="11">get_ledger, get_paycheck_summary</text>
+
+<rect class="diagram-box" x="529" y="42" width="150" height="56"></rect>
+<text class="diagram-label" x="604" y="66" text-anchor="middle">Tables</text>
+<text class="diagram-label-muted" x="604" y="84" text-anchor="middle" font-size="11">RLS per user</text>
+
+<line class="diagram-line" x1="171" y1="70" x2="255" y2="70"></line>
+<line class="diagram-line" x1="445" y1="70" x2="529" y2="70"></line>
+
+<text class="diagram-label-muted" x="213" y="60" text-anchor="middle" font-size="11">RPC call</text>
+<text class="diagram-label-muted" x="487" y="60" text-anchor="middle" font-size="11">reads</text>
+</g>
+</svg>
+</div>
+
+<h3 class="heading-3 mt-4">One living projection, or a planned-versus-actual split</h3>
+<table class="data-table">
+<colgroup><col style="width: 200px;"><col><col></colgroup>
+<thead>
+<tr>
+<th>Option</th>
+<th>Why it was attractive</th>
+<th>Why I didn't pick it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Planned vs actual, with locking and snapshots</td>
+<td>A familiar budgeting mental model: lock in a plan, then compare it against what actually happened</td>
+<td>Real bills exposed the cost. Every edit needed a snapshot and a reconciliation step, and two parallel chains doubled the complexity for a single user who just wants to know what's true right now</td>
+</tr>
+<tr>
+<td>One living projection, no locking, chosen</td>
+<td>Edit a bill, the whole future recalculates instantly. No confirmation ceremony, no dual chains, and it matches how the user actually thinks about money</td>
+<td>No frozen historical plan to compare against; the payment record only tracks what was actually paid, not a prior projection</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Stack: Next.js 16 (App Router), TypeScript (strict), Supabase (Postgres + Auth), TanStack Query, Recharts, Vercel.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Building and launching</h2>
+<p class="body">I built this with a defined multi-agent team instead of one open-ended build session: an Architect agent for the scaffold and auth, a Data Layer agent for the types and hooks, a UI Builder agent for the interface, and a QA agent that ran an adversarial checklist against the finished app. Each agent had a scoped system prompt, a fixed output manifest, and a checkpoint I had to approve before the next one started. The technical design doc was the one law everyone had to follow; any agent that hit a real ambiguity had to stop and surface it rather than guess.</p>
+<p class="body">The best bug: the app worked perfectly in every browser tab test, but Chrome on my own Android phone offered "Add to Home Screen" instead of a real install. The cause was in the auth middleware, not the PWA files. It intercepted every request, including the service worker and manifest, and Chrome's background installability checker fetches those without a logged-in session, so it silently got redirected to the login page's HTML instead of the actual manifest, and Chrome couldn't confirm the app was installable. The fix was two lines: exclude the service worker, manifest, and icons from the middleware's route matcher.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Looking back</h2>
+<p class="body">A full security review before calling v2 done turned up nothing high or medium severity, and three real low-severity fixes: error messages that leaked internal details, missing bounds checks on money fields, and a config file that shouldn't have been committable. None were urgent, all were worth fixing before this became more than a single-user app. What I'd revisit: the review itself is scoped to one user; a real multi-user expansion needs an adversarial test that actually tries to read one account's data from another, not just a code-level audit.</p>
+</section>
+
+</div>
+
+<p class="body mt-6 measure-text"><a class="body-link" href="../index.html#projects">Back to all projects</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:you@yourdomain.com">[you@yourdomain.com]</a>
+<a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated [Month Year]</span>
+</footer>
+</body>
+</html>
