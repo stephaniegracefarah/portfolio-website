@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Your Name]: taxsight</title>
+<meta name="description" content="A structured, source-cited dataset of the tax obligations that apply to digital platforms and marketplaces.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="[Your Name]: taxsight">
+<meta property="og:description" content="A structured, source-cited dataset of the tax obligations that apply to digital platforms and marketplaces.">
+<meta property="og:image" content="../assets/img/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="site-name" href="../index.html">[Your Name]</a>
+<nav class="site-nav" aria-label="Main">
+<a href="../index.html" aria-current="page">Projects</a>
+<a href="../process.html">Process</a>
+<a href="../about.html">About</a>
+<a href="../contact.html">Contact</a>
+<a href="../resume.pdf">Resume (PDF)</a>
+</nav>
+</header>
+
+<main id="main" class="site-main">
+
+<p class="caption"><a class="ink-muted" style="text-underline-offset: 3px;" href="../index.html#projects">All projects</a></p>
+
+<section class="mt-5 measure-text">
+<h1 class="display">taxsight: tax obligations, extracted and cited</h1>
+<p class="meta mt-2">Solo project, in progress since March 2026</p>
+
+<dl class="case-study-summary">
+<dt>Problem</dt>
+<dd>A marketplace operating in several countries picks up tax obligations from several unrelated regimes at once, each set by a different authority, published in a different format, and changed on its own schedule. Tracking that by hand means reading dozens of government and advisory pages and hoping nothing changed since the last time.</dd>
+<dt>What I made</dt>
+<dd>A pipeline that uses Claude to extract tax obligations from public regulatory sources into a structured, source-cited dataset, writes the results to versioned seed CSVs, and models them in dbt on DuckDB. Every row carries its source URL, a verbatim quote, and a confidence flag.</dd>
+<dt>Where it is</dt>
+<dd>Phase 1 in progress: 129 rows across four regimes for a first set of hero tickers, with public code.</dd>
+</dl>
+
+<p class="link-row">
+<a class="body-link external-link" href="https://github.com/stephaniegracefarah/taxsight" target="_blank" rel="noopener">Code on GitHub</a>
+</p>
+</section>
+
+<div class="stack-5 mt-6">
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">The problem and the spec</h2>
+<p class="body">A marketplace that operates in several countries picks up obligations from several unrelated regimes at once: seller reporting rules, digital services taxes, US state marketplace facilitator laws, and VAT and GST rules that make the platform the deemed supplier. Each regime is set by a different authority, in a different format, on its own schedule, and the guidance pages themselves move or disappear without notice.</p>
+<p class="body">The hardest scoping call showed up while validating the first set of hero tickers against a geographic segment disclosure policy. StubHub failed the check outright: its filings break out only the US, Switzerland, and a rest-of-world catch-all. The first replacement candidate, Uber, failed too, regional aggregates only, no individual countries beyond the UK. The one that actually passed was eBay, whose filings name the US, UK, Germany, and China individually. Real filings turned out to be pickier than the plan assumed.</p>
+
+<div class="stack-2 mt-2">
+<table class="data-table">
+<colgroup><col style="width: 60px;"><col><col style="width: 100px;"></colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>Every row carries its source URL, a verbatim quote, and a confidence flag, so nothing is asserted without a traceable basis</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>The complexity score is computed from effective date and guidance maturity, never extracted by Claude, since a model can't extract a number that isn't in the source</td>
+<td>Must</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>Real-time rule updates, filing preparation, and private company data</td>
+<td>Later</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Three of the decisions, reconstructed from the project's own engineering notes.</p>
+</div>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Design</h2>
+<p class="body">There's no interface to show here. The real design surface is the data itself: every row carries the same four audit fields (source URL, a verbatim quote, a confidence flag, a last-verified date) regardless of which regime it comes from, so a reviewer can trace any value back to the sentence that supports it without opening a second tab. Two of those fields were deliberate calls: the confidence flag exists because "the source is unclear" is a real, honest answer, not a failure state, and the verbatim quote exists because a paraphrase is one more place a value can quietly drift from what the source actually said.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Technical design</h2>
+<p class="body">Two ETL strategies run side by side. Scrape mode fetches one authoritative page, strips it to text, and passes it to Claude with a regime-specific prompt: extract only what's explicitly stated, return null for anything missing, include a verbatim quote. Research mode gives Claude a country and the web search tool instead, since VAT and GST marketplace rules are fragmented across 34 national tax authorities and no single source covers them. Scrape mode is preferred whenever a single authoritative source exists, since the source is fixed and easy to verify; research mode trades some of that control for coverage.</p>
+
+<div class="architecture-diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="Architecture diagram: public regulatory sources flow through Claude extraction (scrape or research mode) into seed CSVs, then into dbt on DuckDB.">
+<g font-size="13">
+<rect class="diagram-box" x="1" y="42" width="150" height="56"></rect>
+<text class="diagram-label" x="76" y="66" text-anchor="middle">Public sources</text>
+<text class="diagram-label-muted" x="76" y="84" text-anchor="middle" font-size="10">government, advisory</text>
+
+<rect class="diagram-box" x="191" y="42" width="170" height="56"></rect>
+<text class="diagram-label" x="276" y="66" text-anchor="middle">Claude extraction</text>
+<text class="diagram-label-muted" x="276" y="84" text-anchor="middle" font-size="10">scrape or research mode</text>
+
+<rect class="diagram-box" x="401" y="42" width="130" height="56"></rect>
+<text class="diagram-label" x="466" y="66" text-anchor="middle">Seed CSVs</text>
+<text class="diagram-label-muted" x="466" y="84" text-anchor="middle" font-size="10">versioned, committed</text>
+
+<rect class="diagram-box" x="571" y="42" width="108" height="56"></rect>
+<text class="diagram-label" x="625" y="66" text-anchor="middle">dbt</text>
+<text class="diagram-label-muted" x="625" y="84" text-anchor="middle" font-size="10">on DuckDB</text>
+
+<line class="diagram-line" x1="151" y1="70" x2="191" y2="70"></line>
+<line class="diagram-line" x1="361" y1="70" x2="401" y2="70"></line>
+<line class="diagram-line" x1="531" y1="70" x2="571" y2="70"></line>
+</g>
+</svg>
+</div>
+
+<h3 class="heading-3 mt-4">Extracting the complexity score, or computing it</h3>
+<table class="data-table">
+<colgroup><col style="width: 220px;"><col><col></colgroup>
+<thead>
+<tr>
+<th>Option</th>
+<th>Why it was attractive</th>
+<th>Why I didn't pick it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ask Claude to extract the complexity score directly, alongside the other fields</td>
+<td>One extraction pass, no separate scoring logic to write and maintain</td>
+<td>There's nothing in any source to extract; it's a taxsight methodology choice, not a fact. Asking Claude to extract it anyway contradicted the project's own rule, never infer values not in the source, and produced numbers with no traceable basis</td>
+</tr>
+<tr>
+<td>Compute it deterministically in each build script, chosen</td>
+<td>The same inputs always produce the same score, and the rule is identical across all four regimes</td>
+<td>One more computed field to keep in sync across four separate build scripts instead of one shared extraction prompt</td>
+</tr>
+</tbody>
+</table>
+<p class="caption">Stack: Python, Anthropic Claude API (web search tool), requests, BeautifulSoup, dbt Core, DuckDB.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Building and launching</h2>
+<p class="body">Phase 1's data build happened in about three days in March 2026: scaffolding and dbt setup, then the ETL scripts and prompts, then the seed data itself. The repo sat untouched for months after that, until I came back in September to clean it up and write the README that pulls it all together.</p>
+<p class="body">The most durable lesson from Phase 1 wasn't a code bug, it was that government URLs move without warning. All three original source URLs for DAC7, UK DPI, and Canada DPI returned 404 partway through the build. I found the current pages by hand and updated the scripts, and URL validation is now a permanent manual step in the quarterly refresh checklist rather than an assumption baked into the extraction scripts.</p>
+</section>
+
+<section class="stack-3 measure-text">
+<h2 class="heading-2">Looking back</h2>
+<p class="body">The marketplace facilitator thresholds needed a second source before they were actually usable: the primary guide simply doesn't state a revenue threshold for eight states, and the fix was adding a second source plus a merge function that only fills gaps and never overrides the primary source when the two might mean different things. What I'd flag honestly: the VAT and GST rows come from Claude's own web search rather than one fixed authoritative page per country, which is the right call for coverage but a real trade-off in verifiability against the scraped regimes, and it's the one place in the dataset I'd want a second reviewer before trusting a row at face value.</p>
+</section>
+
+</div>
+
+<p class="body mt-6 measure-text"><a class="body-link" href="../index.html#projects">Back to all projects</a></p>
+
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-links">
+<a href="mailto:you@yourdomain.com">[you@yourdomain.com]</a>
+<a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+<a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+</div>
+<span>Updated [Month Year]</span>
+</footer>
+</body>
+</html>
