@@ -96,11 +96,14 @@
 </div>
 </section>
 
-<section class="stack-3 measure-wide">
+<section class="stack-3">
 <h2 class="heading-2">Design</h2>
-<p class="body">The visual language went through a full discover-to-deliver design process, landing on a system I call "Typewriter Utility": the artwork supplies all color, the UI supplies none. Every button and label renders in one ink color on the canvas's own paper tone, and the canvas itself is the page: full-bleed, edge to edge.</p>
-<p class="body">The biggest addition came out of a simple question: how do you prove the art is really following you, not just decorating your session? "Show the magic" answers it directly: a panel that shows the actual function driving the growth you're watching, with that tick's real argument values annotated inline, live.</p>
-<div class="figure-row">
+<div class="stack-3 measure-text">
+<p class="body">The interface went through a full Double Diamond process (discover, define, develop, deliver), landing on a system I call "Typewriter Utility": the artwork supplies all color, the UI supplies none. Every button and label renders in one ink color on the canvas's own paper tone, and the canvas itself is the page: full-bleed, edge to edge. The Define phase settled the actual problem it's solving: MoveScape has no gallery room or attendant to build trust the way a physical installation does, so the page alone has to decide, on purpose, how visibly it shows the mechanism turning movement into art, and how a session begins, sustains itself, and ends.</p>
+<p class="body">One decision changed after real critique. Discard was first going to be small, quiet, and text-only, to lower the odds of an accidental click. That got rejected as a dark pattern: the product already refuses to rank effort (a hard workout and a gentle one make equally valid art), so visually diminishing the choice to discard a piece would contradict that principle at the UI level. Discard ended up the same size and weight as Save and Keep moving; misclick protection comes from spacing and order, not from making one option look less important.</p>
+<p class="body">"Show the magic" answers a related question: how do you prove the art is really following you, not just decorating your session? The honesty bar I set for it: someone who reads code should be able to watch the panel and verify what's actually running, not trust a summary of it. So it shows the real function driving the growth on screen, verbatim, with that tick's live argument values annotated inline, not a paraphrased formula.</p>
+</div>
+<div class="figure-row measure-wide">
 <img class="figure-placeholder" src="../assets/img/movescape-live.png" alt="MoveScape mid-session: a full-bleed canvas of branching botanical growth in dark red and cream, with minimal bracket-style controls (Pause, Finish, Restart) floating over it.">
 <img class="figure-placeholder" src="../assets/img/movescape-show-the-magic.png" alt="The same session with the &quot;Show the magic&quot; panel open, displaying the real growthStepFor function and this tick's live speed, expansion and symmetry values.">
 </div>
